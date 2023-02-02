@@ -10,10 +10,15 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import { Checkbox, FormControl, FormControlLabel } from '@mui/material';
+import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-const REGISTER_URL = 'api/register/';
+import { endpointsURL } from '../api/endpoints';
+// const REGISTER_URL = 'api/register/';
 const theme = createTheme();
 
 export default function SignUp() {
@@ -24,14 +29,18 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
   const [matchPwd, setMatchPwd] = useState('');
-  const [companyNames , setCompanyNames] = useState(['google','netflix','facebook'])
-
+  const [companyNames, setCompanyNames] = useState(['google', 'netflix', 'facebook']) /// TODO: change it to useState([])
+  const [companyName, setCompanyName] = useState('');
+  const [companyType, setCompanyType] = useState<'customer' | 'supplier' | null>(null);
+  const [isNewCompany, setisNewCompany] = useState(false);
 
   useEffect(() => {
-    // const response = axios.get(FETCH_COMPANYNAMES);
-    // if (response) {
+    //unComment this for gettings compqny names from the server
+    //const response = axios.get(endpointsURL.companyNames);
+    //if (response) {
     //   setCompanyNames(response.data);
     // } else {
+    //  catch the error
     //   console.log('Registration Failed')
     // }
   }, [])
@@ -40,7 +49,7 @@ export default function SignUp() {
     e.preventDefault();
     console.log("submitted");
     try {
-      const response = await axios.post(REGISTER_URL,
+      const response = await axios.post(endpointsURL.register,
         JSON.stringify({ username: user, email: email, first_name: firstname, last_name: lastname, password: pwd }),
         {
           headers: { 'Content-Type': 'application/json' },
@@ -141,30 +150,51 @@ export default function SignUp() {
               autoComplete="current-password"
               onChange={(e) => setPwd(e.target.value)}
             />
-            <TextField
-              value={matchPwd}
-              margin="normal"
-              required
-              fullWidth
-              name="vaildate password"
-              label="vaildate password"
-              type="password"
-              id="vaildate password"
-              autoComplete="current-vaildate password"
-              onChange={(e) => setMatchPwd(e.target.value)}
-            />
-            <FormControl fullWidth>
+            <FormControlLabel control={<Checkbox 
+            checked={ isNewCompany ? false : true } 
+            onChange={()=>setisNewCompany(prev => !prev)} />
+            }label="create new company" />
+            {
+            isNewCompany ? <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">companyName</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={companyName}
-                label="Age"
-                onChange={handleChange}
+                label="companyName"
+                onChange={(e) => setCompanyName(e.target.value)}
               >
-                {companyNames.map(name => <MenuItem value={10}>{name}</MenuItem>)}
+                {companyNames.map(name => <MenuItem value={name}>{name}</MenuItem>)}
+              </Select>
+            </FormControl> : 
+            <>
+            <TextField
+              value={companyName}
+              margin="normal"
+              required
+              fullWidth
+              id="companyName"
+              label="companyName"
+              name="companyName"
+              autoComplete="companyName"
+              onChange={(e) => setCompanyName(e.target.value)}
+            />
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">companyType</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={companyType}
+                label="companyType"
+                onChange={(e) => setCompanyType(e.target.value as 'customer' | 'supplier' | null)}
+              >
+                <MenuItem value={'customer'}>customer</MenuItem>
+                <MenuItem value={'supplier'}>supplier</MenuItem>
               </Select>
             </FormControl>
+            </>
+            }
+            
             <Button
               type="submit"
               fullWidth
