@@ -14,19 +14,16 @@ import UnrequiredAuth from "./components/UnrequiredAuth";
 import Apply from "./layouts/Apply";
 import ProjectTabs from "./components/projectTabs";
 import { useAuthContext } from "./hooks/useAuthContext";
+import { ManageDialog } from "./components/dialogue";
+import { ManageProject } from "./layouts/ManageProject";
+import {EditProject} from "./layouts/EditProject";
 
 export default function App() {
-
-
   const  auth  = useAuthContext();
   console.log({auth});
-
-  
   return <>
-  
   <Routes>
   <Route path="/">
-  
   <Route element={<UnrequiredAuth/>}>
   <Route path="login" element={ <Login />}/> 
    </Route>
@@ -38,6 +35,12 @@ export default function App() {
    </Route>
    <Route element={<RequireAuth />}>
    <Route path="project" element={<ProjectTabs/>} /> 
+   </Route>
+   <Route element={<RequireAuth />}>
+   <Route path="activeProject" element={<ManageProject/>} /> 
+   </Route>
+   <Route element={<RequireAuth />}>
+   <Route path="editProject/:id" element={<EditProject/>} /> 
    </Route>
    <Route element={<RequireAuth />}>
    <Route path="application" element={<Application/>} /> 

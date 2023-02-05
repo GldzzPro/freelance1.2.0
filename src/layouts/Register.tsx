@@ -38,11 +38,13 @@ export default function SignUp() {
   const [employeesNumber, setEmployeesNumber] = useState(0);
 
   useEffect(() => {
+    console.log("useEffect");
     const supliersNames = axios.get(endpointsURL.customerCompanyNames).then(response => response.data );
     const customersNames = axios.get(endpointsURL.supplierCompanyNames).then(response => response.data );
     Promise.all([supliersNames, customersNames]).then((values) =>  setCompanyNames([...values[0].concat(values[1])]))
-  },)
+  },[endpointsURL])
   console.log({companyNames});
+  console.log('rendering');
   
   const handleSubmit = async (e) => {
     e.preventDefault();

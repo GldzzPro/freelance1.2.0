@@ -32,6 +32,7 @@ def ProjectList(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def ProjectCreated(request):
     project = Project.objects.filter(project_owner=request.user)
     serializer = ProjectSerializer(project, many=True)
