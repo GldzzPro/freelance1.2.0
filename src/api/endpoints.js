@@ -1,5 +1,6 @@
 export const endpointsURL = {
-    register : 'api/register/',
-    login : "api/login/",
-    companyNames : "api/companyNames/", //toDo: change to companyNames to the correct endpoint 
+    register : 'users/register/',
+    login : "users/login/",
+    customerCompanyNames : "companies/customer/list/",
+    supplierCompanyNames : "companies/supplier/list/",
 }

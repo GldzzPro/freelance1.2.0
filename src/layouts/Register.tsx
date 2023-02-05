@@ -18,7 +18,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { endpointsURL } from '../api/endpoints';
-// const REGISTER_URL = 'api/register/';
 const theme = createTheme();
 
 export default function SignUp() {
@@ -29,34 +28,33 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
   const [matchPwd, setMatchPwd] = useState('');
-  const [companyNames, setCompanyNames] = useState(['google', 'netflix', 'facebook']) /// TODO: change it to useState([])
+  const [companyNames, setCompanyNames] = useState([]) /// TODO: change it to useState([])
   const [companyName, setCompanyName] = useState('');
   const [companyType, setCompanyType] = useState<'customer' | 'supplier' | null>(null);
   const [isNewCompany, setisNewCompany] = useState(false);
+  const [address, setAddress] = useState('');
+  const [ProjectSize , setProjectSize] = useState('');
+  const [Expertise , setExpertise] = useState('');
+  const [employeesNumber, setEmployeesNumber] = useState(0);
 
   useEffect(() => {
-    //unComment this for gettings compqny names from the server
-    //const response = axios.get(endpointsURL.companyNames);
-    //if (response) {
-    //   setCompanyNames(response.data);
-    // } else {
-    //  catch the error
-    //   console.log('Registration Failed')
-    // }
-  }, [])
-
+    const supliersNames = axios.get(endpointsURL.customerCompanyNames).then(response => response.data );
+    const customersNames = axios.get(endpointsURL.supplierCompanyNames).then(response => response.data );
+    Promise.all([supliersNames, customersNames]).then((values) =>  setCompanyNames([...values[0].concat(values[1])]))
+  },)
+  console.log({companyNames});
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("submitted");
-    try {
-      const response = await axios.post(endpointsURL.register,
+    await axios.post(endpointsURL.register,
         JSON.stringify({ username: user, email: email, first_name: firstname, last_name: lastname, password: pwd }),
         {
           headers: { 'Content-Type': 'application/json' },
 
         }
-      );
-      // TODO: remove console.logs before deployment
+      ).then((response) => {
+        // TODO: remove console.logs before deployment
       console.log(JSON.stringify(response?.data));
       setUser('');
       setPwd('');
@@ -65,17 +63,15 @@ export default function SignUp() {
       setlastname('');
       setEmail('');
       navigate('/login', { replace: true });
-    } catch (err) {
-      if (!err?.response) {
-        console.log('No Server Response');
-      } else if (err.response?.status === 409) {
-        console.log('Username Taken');
-      } else {
-        console.log('Registration Failed')
-      }
-
-    }
-  }
+      }).catch((err)=>{
+        if (!err) {
+          console.log('No Server Response');
+        } else if (err.response?.status === 409) {
+          console.log('Username Taken');
+        } else {
+          console.log('Registration Failed')
+        }
+      }) ;}
 
   return (
     <ThemeProvider theme={theme}>
@@ -111,7 +107,7 @@ export default function SignUp() {
               required
               fullWidth
               id="firstname"
-              label="firstname Address"
+              label="firstname"
               name="firstname"
               autoComplete="firstname"
               onChange={(e) => setfirstname(e.target.value)}
@@ -122,7 +118,7 @@ export default function SignUp() {
               required
               fullWidth
               id="lastname"
-              label="lastname Address"
+              label="lastname"
               name="lastname"
               autoComplete="lastname"
               onChange={(e) => setlastname(e.target.value)}
@@ -133,7 +129,7 @@ export default function SignUp() {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label="Email"
               name="email"
               autoComplete="email"
               onChange={(e) => setEmail(e.target.value)}
@@ -151,11 +147,11 @@ export default function SignUp() {
               onChange={(e) => setPwd(e.target.value)}
             />
             <FormControlLabel control={<Checkbox 
-            checked={ isNewCompany ? false : true } 
+            checked={ isNewCompany  } 
             onChange={()=>setisNewCompany(prev => !prev)} />
             }label="create new company" />
             {
-            isNewCompany ? <FormControl fullWidth>
+            !isNewCompany ? <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">companyName</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -164,7 +160,7 @@ export default function SignUp() {
                 label="companyName"
                 onChange={(e) => setCompanyName(e.target.value)}
               >
-                {companyNames.map(name => <MenuItem value={name}>{name}</MenuItem>)}
+                {companyNames.map(name => <MenuItem value={name.company_name}>{name.company_name}</MenuItem>)}
               </Select>
             </FormControl> : 
             <>
@@ -179,6 +175,29 @@ export default function SignUp() {
               autoComplete="companyName"
               onChange={(e) => setCompanyName(e.target.value)}
             />
+            <TextField
+              value={address}
+              margin="normal"
+              required
+              fullWidth
+              id="address"
+              label="address"
+              name="address"
+              autoComplete="address"
+              onChange={(e) => setAddress(e.target.value)}
+            />
+            <TextField
+              value={employeesNumber}
+              margin="normal"
+              required
+              fullWidth
+              id="employeesNumber"
+              label="Employees Number"
+              name="employeesNumber"
+              autoComplete="Employees Number"
+              type="number"
+              onChange={(e) => setEmployeesNumber(e.target.value)}
+            />
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">companyType</InputLabel>
               <Select
@@ -192,9 +211,33 @@ export default function SignUp() {
                 <MenuItem value={'supplier'}>supplier</MenuItem>
               </Select>
             </FormControl>
+            {companyType === 'supplier' ? 
+            <>
+            <TextField 
+            value={ProjectSize}
+            margin="normal"
+            required
+            fullWidth
+            id="ProjectSize"
+            label="Project size"
+            name="ProjectSize"
+            autoComplete="ProjectSize"
+            onChange={(e) => setProjectSize(e.target.value)}
+            />  
+            <TextField
+              value={Expertise}
+              margin="normal"
+              required
+              fullWidth
+              id="Expertise"
+              label="Expertise"
+              name="Expertise"
+              autoComplete="Expertise"
+              onChange={(e) => setExpertise(e.target.value)}
+            /> </> : null
+            }
             </>
             }
-            
             <Button
               type="submit"
               fullWidth

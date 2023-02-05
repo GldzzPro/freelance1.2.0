@@ -12,7 +12,9 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-const LOGIN_URL = 'api/login/';
+import { endpointsURL } from '../api/endpoints';
+
+const LOGIN_URL = endpointsURL.login;
 const theme = createTheme();
 export  default function  SignIn() {
   const { dispatch } = useAuthContext()

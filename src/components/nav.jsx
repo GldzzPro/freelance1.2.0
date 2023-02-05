@@ -29,7 +29,7 @@ function ResponsiveAppBar() {
         navigate('/');
     }
 
-    const pages = jwt_decode(auth?.user?.access).user_type === "consumer" ? [{name :'Profile' , Link : "/"}, {name :'create project' , Link : "/project"}] : [{name :'Profile' , Link : "/"}, {name :'apply for project' , Link : "/project"}];
+    const pages = jwt_decode(auth?.user?.access).user_type[0] === "customer" ? [{name :'Profile' , Link : "/"}, {name :'create project' , Link : "/project"}] : [{name :'Profile' , Link : "/"}, {name :'apply for project' , Link : "/project"}];
 
   return (
     <AppBar position="static">

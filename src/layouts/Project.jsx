@@ -37,7 +37,7 @@ const handleSubmit = async (e) => {
     console.log({auth} , "i want to see it here")
     console.log({auth} , "i want to see it here")
 
-    const body = jwt_decode(auth?.user?.access).user_type === 'consumer' ? {  title  , description , delievery_service } : null 
+    const body = jwt_decode(auth?.user?.access).user_type[0] === "customer"  ? {  title  , description , delievery_service } : null 
    console.log("applicated");
    console.log({body});
     try {
@@ -108,7 +108,7 @@ navigate(`/`, {replace : true})
             />
                console.log({auth} , "i want to see it here")
 
-            {jwt_decode(auth?.user?.access).user_type === 'consumer' ? <FormControlLabel control={<Checkbox checked={ delievery_service==="no" ? false : true } onChange={(e)=>{e.target.checked ? setDelieveryService("yes") : setDelieveryService("no") }} />} label="delivery service" /> : null}
+            {jwt_decode(auth?.user?.access).user_type[0] === "customer"  ? <FormControlLabel control={<Checkbox checked={ delievery_service==="no" ? false : true } onChange={(e)=>{e.target.checked ? setDelieveryService("yes") : setDelieveryService("no") }} />} label="delivery service" /> : null}
             <Button
               type="submit"
               fullWidth
