@@ -9,7 +9,6 @@ import { endpointsURL } from '../api/endpoints';
 export const ManageProject = () => {
     const [projects, setProjects] = React.useState({})
     const  auth  = useAuthContext();
-    console.log({auth});
         
     const navigate = useNavigate();
     React.useEffect(() => {
@@ -18,11 +17,13 @@ export const ManageProject = () => {
               { headers: { 
                 'Content-Type': 'application/json' ,
                   "Authorization" : `Bearer ${auth?.user?.access}`} });
+                  setProjects(response.data);
               console.log("azzz",response.data);
             }
-          
             fetchData();
-          }, []);
+          }, [auth]);
+
+    console.log(projects);
         
     return (
         <Grid
