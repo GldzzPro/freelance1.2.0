@@ -19,7 +19,6 @@ const MainLayout = () => {
         // if used in more components, this should be in context 
         // axios to /logout endpoint 
         useEffect(()=>{
-          console.log(auth);
          auth?.user?.access && navigate('/profile');
         },[])
         

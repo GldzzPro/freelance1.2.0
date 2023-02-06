@@ -8,28 +8,32 @@ import { useAuthContext } from '../hooks/useAuthContext';
 
 
 function Profile() {
-
-
-const auth = useAuthContext();
-
-
-
-useEffect(()=>{
-  
-  
-   console.log({auth} , "i want to see it here")
-   console.log(jwt_decode(auth?.user?.access))
-
-},[])
-
+  const auth = useAuthContext();
+  const [dataIsReady, setDataIsReady] = React.useState(false)
+  const [data, setData] = React.useState(null)
+  const fetchUserProfile = async () => await axios.get("NAFESSS URL MTE# EL FETCH PROFILE", {
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${auth?.user?.access}`
+    }
+  }).then((response) => {
+    console.log(response)
+    if (response?.status === 200) {
+      setData(response.data)
+      setDataIsReady(true)
+    }
+  });
+  useEffect(() => {
+    fetchUserProfile()
+  }, [auth])
   return (
     <>
-    <ResponsiveAppBar/>
-    <div style={{ marginLeft : "50%" }}>Profile Page</div>
-    <ListDividers  allData={jwt_decode(auth?.user?.access)}/>
+      <ResponsiveAppBar />
+      <div style={{ marginLeft: "50%" }}>Profile Page</div>
+      {dataIsReady ? <ListDividers allData={data} /> : null}
 
     </>
-   
+
   )
 }
 

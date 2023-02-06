@@ -22,8 +22,8 @@ function Apply() {
   const [idProject, setProject] = useState('')  
   const handleSubmit = async (id , project_owner ) => {
     
-   console.log("applicated");
-   console.log(data)
+    console.log("sexe ma7arem applicated")
+    console.log(data)
    
     try {
         const response = await axios.post( PROJECT_APPLY_URL , 

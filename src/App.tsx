@@ -20,27 +20,26 @@ import {EditProject} from "./layouts/EditProject";
 
 export default function App() {
   const  auth  = useAuthContext();
-  console.log({auth});
   return <>
   <Routes>
   <Route path="/">
   <Route element={<UnrequiredAuth/>}>
-  <Route path="login" element={ <Login />}/> 
+    <Route path="login" element={ <Login />}/> 
    </Route>
    <Route element={<UnrequiredAuth />}>
-   <Route path="register" element={<Register />}/> 
+     <Route path="register" element={<Register />}/> 
    </Route>
    <Route element={<RequireAuth />}>
-   <Route path="/" element={<Profile/>} /> 
+       <Route path="/" element={<Profile/>} /> 
    </Route>
    <Route element={<RequireAuth />}>
-   <Route path="project" element={<ProjectTabs/>} /> 
+      <Route path="project" element={<ProjectTabs/>} /> 
    </Route>
    <Route element={<RequireAuth />}>
-   <Route path="activeProject" element={<ManageProject/>} /> 
+        <Route path="activeProjects" element={<ManageProject/>} /> 
    </Route>
    <Route element={<RequireAuth />}>
-   <Route path="editProject/:id" element={<EditProject/>} /> 
+      <Route path="activeProjects/edit/:id/:title/:description" element={<EditProject/>} />
    </Route>
    <Route element={<RequireAuth />}>
    <Route path="application" element={<Application/>} /> 

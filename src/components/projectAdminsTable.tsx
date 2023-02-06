@@ -6,10 +6,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { IconButton } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 
 
-export const  privilegeTable =({data })=> {
+export const  PrivilegeTable =({data })=> {
     const deleteUser = (id) => {
         console.log("deleted user", id)
     }
@@ -18,10 +18,9 @@ export const  privilegeTable =({data })=> {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>name</TableCell>
-            <TableCell align="right">name</TableCell>
-            <TableCell align="right">privilege</TableCell>
-            <TableCell align="right">delete privelege</TableCell>
+            <TableCell align="left">name</TableCell>
+            <TableCell align="left">permission</TableCell>
+            <TableCell align="left">delete member</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -30,11 +29,11 @@ export const  privilegeTable =({data })=> {
               key={row.name}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell component="th" scope="row">
+              <TableCell align="left" component="th" scope="row">
                 {row.name}
               </TableCell>
-              <TableCell align="right">{row.role }</TableCell>
-              <TableCell align="right" ><IconButton onClick={()=>deleteUser(row.id)}>delete</IconButton></TableCell>
+              <TableCell align="left">{row.role }</TableCell>
+              <TableCell align="left" ><Button color="error" variant="contained" onClick={()=>deleteUser(row.id)}>delete</Button></TableCell>
             </TableRow>
           ))}
         </TableBody>

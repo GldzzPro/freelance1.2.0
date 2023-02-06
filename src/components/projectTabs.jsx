@@ -53,8 +53,7 @@ function a11yProps(index) {
 
 export default function ProjectTabs() {
   const [value, setValue] = React.useState(0);
-
-  const   auth   = useAuthContext() ;
+  const auth = useAuthContext() ;
   console.log(jwt_decode(auth?.user?.access).user_type) ;
 
 
@@ -69,15 +68,15 @@ export default function ProjectTabs() {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs centered value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label={jwt_decode(auth?.user?.access).user_type === "consumer" ?  "creat a project" : "apply for a project" } {...a11yProps(0)} />
-          <Tab label={jwt_decode(auth?.user?.access).user_type === "consumer" ? "created projects" :  "applied project" } {...a11yProps(1)} />
+          <Tab label={jwt_decode(auth?.user?.access).user_type === "customer" ?  "creat a project" : "apply for a project" } {...a11yProps(0)} />
+         {jwt_decode(auth?.user?.access).user_type !== "customer" &&<Tab label={ "applied project" } {...a11yProps(1)} />}
         </Tabs>
       </Box>
       <TabPanel  value={value} index={0}>
-      { jwt_decode(auth?.user.access).user_type === "consumer" ? <Project/> : <Apply/> }
+      { jwt_decode(auth?.user?.access).user_type === "customer" ? <Project/> : <Apply/> }
       </TabPanel>
       <TabPanel  value={value} index={1}>
-      { jwt_decode(auth?.user.access).user_type === "consumer" ? <Created/> :  <Applied/>}
+      { jwt_decode(auth?.user?.access).user_type === "customer" ? null :  <Applied/>}
       </TabPanel>
     </Box>
     </>

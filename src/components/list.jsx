@@ -1,16 +1,13 @@
-import React ,{    useState, useEffect } from 'react';
-import useAuth from '../hooks/useAuth';
-import { Link, useNavigate , useParams} from 'react-router-dom';
-import axios from '../api/axios';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import MaterialUIPickers from '../components/datePicker';
-import dayjs from 'dayjs';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from '../api/axios';
 import { useAuthContext } from '../hooks/useAuthContext';
 const UPDATE_URL = 'api/register/';
 const theme = createTheme();
@@ -27,7 +24,7 @@ export  default function  List({allData , user_type}) {
 	const [firstname, setfirstname] = useState(allData.first_name[0]);
 	const [lastname, setlastname] = useState(allData.last_name[0]);
 	const [email, setEmail] = useState(allData.email[0]);
-  
+  const { dispatch } = useAuthContext()
     
 
     // const [birthDay, setBirthDay] = useState(dayjs('2014-08-18T21:11:54'));
@@ -38,29 +35,33 @@ export  default function  List({allData , user_type}) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 		console.log("submitted");
-        try {
+   
             const response = await axios.post(UPDATE_URL,
                 JSON.stringify({ username , email  , first_name : firstname, last_name : lastname  }),
                 {
                     headers: { 'Content-Type': 'application/json' },
                    
                 }
-            );
-            // TODO: remove console.logs before deployment
-            console.log(JSON.stringify(response?.data));
+            ).then((response) => {
+              console.log(JSON.stringify(response?.data));
+              if(response?.status === 200){
+               axios.get("NAFESSS URL MTE# EL FETCH PROFILE" , {
+                  headers: { 
+                    'Content-Type': 'application/json' ,
+                    "Authorization" : `Bearer ${auth?.user?.access}`
+                  } 
+                }).then((response)=>{
+                  console.log(response)
+                  if(response?.status === 200){
+                    dispatch({type: 'LOGIN', payload: response?.data})
+                  }
+                                       })
+            } 
+             
             //console.log(JSON.stringify(response))
             //clear state and controlled inputs
             navigate('/', { replace : true });
-        } catch (err) {
-            if (!err?.response) {
-                console.log('No Server Response');
-            } else if (err.response?.status === 409) {
-                console.log('Username Taken');
-            } else {
-                console.log('Registration Failed')
-            }
-            
-        }
+            })
     }
 
   return (
@@ -75,9 +76,6 @@ export  default function  List({allData , user_type}) {
             alignItems: 'center',
           }}
         >
-          {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar> */}
           <Typography component="h1" variant="h5">
             update profile
           </Typography>
@@ -114,7 +112,6 @@ export  default function  List({allData , user_type}) {
               label="lastname"
               name="lastname"
               autoComplete="lastname"
-              
               onChange={(e) => setlastname(e.target.value)}
             />
             <TextField
@@ -126,7 +123,6 @@ export  default function  List({allData , user_type}) {
               label="Email Address"
               name="email"
               autoComplete="email"
-              
               onChange={(e) => setEmail(e.target.value)}
             />
             <Button

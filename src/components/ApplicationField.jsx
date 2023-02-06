@@ -32,17 +32,11 @@ export  default function  ApplicationField({type}) {
     const handleChange = (newValue) => {
        setBirthDay(newValue);
       };
-    useEffect(()=>{
-      console.log(type);
-      console.log(auth.user.acess) ;
-      console.log(delievery_service)
-    },[delievery_service])
-    
+
     const handleSubmit = async (e) => {
       e.preventDefault();
       const body = type === 'producer' ? {  user_type : type  , adress , delievery_service } : {  user_type : type  , adress , birthDay : birthDay.$d }
-     console.log("applicated");
-     console.log({body});
+ 
       try {
           const response = await axios.post(APPLICATION_URL , 
               JSON.stringify(body),

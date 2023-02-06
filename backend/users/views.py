@@ -42,7 +42,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
             profile = Customer_Employees.objects.get(user_id=user.id)
             serializer = CustomerEmployeesSerializer(instance=profile)
-            token['user_type'] = 'customer',
+            token['user_type'] = 'customer'
 
         except:
             token['user_type'] = 'supplier'

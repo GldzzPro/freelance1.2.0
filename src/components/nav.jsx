@@ -20,10 +20,11 @@ function ResponsiveAppBar() {
         navigate('/');
     }
 
-    const pages = jwt_decode(auth?.user?.access).user_type[0] === "customer" ? [
+
+    const pages = jwt_decode(auth?.user?.access).user_type === "customer" ? [
       {name :'Profile' , Link : "/"}, 
       {name :'create project' , Link : "/project"} , 
-      {name :'active projects' , Link : "/activeProject"}
+      {name :'active projects' , Link : "/activeProjects"}
     ] : [
       {name :'Profile' , Link : "/"}, 
       {name :'apply for project' , Link : "/project"}

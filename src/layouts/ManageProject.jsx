@@ -3,13 +3,17 @@ import Grid from '@mui/material/Grid';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
 import jwt_decode from "jwt-decode";
+import ResponsiveAppBar from '../components/nav';
 import axios from 'axios';
 import { endpointsURL } from '../api/endpoints';
+import { Button , Typography , CircularProgress} from '@mui/material';
+import { replace } from 'formik';
 
 export const ManageProject = () => {
     const [projects, setProjects] = React.useState({})
+    const [user, setUser] = React.useState({})
+    const [ready, setReady] = React.useState(false)
     const  auth  = useAuthContext();
-        
     const navigate = useNavigate();
     React.useEffect(() => {
             async function fetchData() {
@@ -18,6 +22,7 @@ export const ManageProject = () => {
                 'Content-Type': 'application/json' ,
                   "Authorization" : `Bearer ${auth?.user?.access}`} });
                   setProjects(response.data);
+                  setReady(true)
               console.log("azzz",response.data);
             }
             fetchData();
@@ -26,29 +31,36 @@ export const ManageProject = () => {
     console.log(projects);
         
     return (
+        <>
+      <ResponsiveAppBar/>
         <Grid
-            container
-            direction="row"
+        padding={10}
+        container
+        direction="row"
             justifyContent="center"
             alignItems="center"
-        >
-         {/* {projects.map((project) => {
-                return (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={project.id}>
-                            <Grid item xs={12}>
-                                <Typography variant="h6" component="h2">
-                                    {project.name}
+            >
+            
+         { !ready ? <CircularProgress /> :  projects?.map((project) => {
+             return (
+                    <Grid item xs={12} sm={12} md={12} lg={12} key={project.id}>
+                            <Grid container columnGap={5} xs={12}>
+                                <Typography>
+                                    {project.title} 
                                 </Typography>
-                                <Typography variant="h6" component="h2">
-                                    {project.description}
+                                <Typography>
+                                    {project.description} 
                                 </Typography>
-                                <button onClick={()=> navigate(`editProject/${project.id}`)}>
-                                    {project.description}
-                                </button>
+                                <Button onClick={()=> navigate(`edit/${project.id}/${project.title}/${project.description}` )}>
+                                    manage
+                                </Button >
                         </Grid>
                     </Grid>
-                    )})} */}
+                    )
+                    })
+        }
                     </Grid>
+                    </>
 
 
     )

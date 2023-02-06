@@ -5,7 +5,6 @@ import { useAuthContext } from "../hooks/useAuthContext";
 const RequireAuth = () => {
     const auth  = useAuthContext();
     const location = useLocation();
-    console.log({auth} , "required")
     
      
    
