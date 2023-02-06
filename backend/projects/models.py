@@ -12,7 +12,12 @@ class Project(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-class Project_Employees(models.Model):
-    id_project = models.ForeignKey(Project , on_delete = models.CASCADE, null = True )
-    id_user = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
+class Project_Members(models.Model):
+    # id_project = models.ForeignKey(Project , on_delete = models.CASCADE, null = True )
+    # id_user = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
+    id_project = models.CharField(max_length = 20,null=True) 
+    id_user = models.CharField(max_length = 20, null=True) 
     user_role = models.CharField(max_length = 20) 
+
+
+    

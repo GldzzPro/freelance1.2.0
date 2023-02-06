@@ -1,11 +1,12 @@
 from django.shortcuts import render
-from django.shortcuts import render
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from .serializers import CustomerEmployeesSerializer, SupplierEmployeesSerializer
+from .models import Customer_Employees
 # Create your views here.
 
 
@@ -27,27 +28,32 @@ def getRoutes(request):
 
 
 
-
+# @api_view(['POST'])
+# def EmployeeRegister(register):
+#     try:
+#         serialzier = 
 
 @api_view(['POST'])
 def CustomerEmployeeRegister(request):
-    serializer = CustomersCompanySerializer(data=request.data)
+    serializer = CustomerEmployeesSerializer(data=request.data)
+    print(request.data)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def SupplierEmployeeRegister(request):
-    serializer = SupplierCompanySerializer(data=request.data)
+    serializer = SupplierEmployeesSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-    return Response(vserializer.data)    
+    return Response(serializer.data)    
 
 
 @api_view(['GET'])
 def CustomerEmployeeList(request):
-    employee = Customers_Company.objects.all()
-    serializer = CustomersCompanySerializer(company, many=True)
+    employee = Customer_Employees.objects.all()
+    serializer = CustomerEmployeesSerializer(employee, many=True)
     return Response(serializer.data)
 
 
@@ -55,5 +61,5 @@ def CustomerEmployeeList(request):
 @api_view(['GET'])
 def SupplierEmployeeList(request):
     employee = Supplier_Company.objects.all()
-    serializer = SupplierCompanySerializer(company, many=True)
+    serializer = SupplierEmployeesSerializer(company, many=True)
     return Response(serializer.data)    

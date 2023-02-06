@@ -11,6 +11,8 @@ from rest_framework import generics
 from rest_framework.response import Response
 from .serializers import UserSerializer
 from .models import Profile
+from employees.models import Customer_Employees, Supplier_Employees
+from employees.serializers import CustomerEmployeesSerializer
 
 
 @api_view(['POST'])
@@ -27,24 +29,29 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         # Add custom claims
-        # try:
-        #     profile = Profile.objects.get(profile_owner_id=user.id)
-        #     serializer = ProfileSerializer(instance=profile)
-        #     user_type=serializer.data['user_type']
-        #     adress = serializer.data['adress']
-        #     delievery_service = serializer.data['delievery_service']
-        #     token['user_type']= user_type
-        #     token['adress']= adress
-        #     token['delievery_service']= delievery_service
+        try:
+            # profile = Profile.objects.get(profile_owner_id=user.id)
+            # serializer = ProfileSerializer(instance=profile)
+            # user_type=serializer.data['user_type']
+            # adress = serializer.data['adress']
+            # delievery_service = serializer.data['delievery_service']
+            # token['user_type']= user_type
+            # token['adress']= adress
+            # token['delievery_service']= delievery_service
 
-        # except:
-        #     pass
+
+            profile = Customer_Employees.objects.get(user_id=user.id)
+            serializer = CustomerEmployeesSerializer(instance=profile)
+            token['user_type'] = 'customer',
+
+        except:
+            token['user_type'] = 'supplier'
         token['username'] = user.username,
         token['email'] = user.email,
         token['password'] = user.password,
         token['first_name'] = user.first_name,
         token['last_name'] = user.last_name,
-        token['user_type'] = 'customer',
+        
 
         return token
 

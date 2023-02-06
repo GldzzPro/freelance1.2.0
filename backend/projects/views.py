@@ -1,11 +1,14 @@
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import User
 from rest_framework import permissions
-from .serializers import ProjectSerializer
+from .serializers import ProjectSerializer, ProjectMembersSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import generics
+import json
 from rest_framework.response import Response
-from .models import Project
+from .models import Project, Project_Members
+from users.serializers import UserSerializer
 # Create your views here.
 
 
@@ -62,6 +65,58 @@ def ProjectDelete(request, pk):
     project = Project.objects.get(id=pk)
     project.delete()
     return Response('Item succesfully deleted!')
+
+
+
+##################
+
+
+# now we'll create the views of the projects members 
+
+
+##################
+
+
+
+
+@api_view(['POST'])
+def Add_Member(request):
+    serializer = ProjectMembersSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+def List_Project_Member(request):
+    l = []
+    dict_1 = {}
+    members = Project_Members.objects.filter(id_project=request.data['project_id'])
+    serializer = ProjectMembersSerializer(members, many=True)
+    for i in serializer.data:
+        print(i['id_user'], type(i['id_user']))
+        user = User.objects.filter(id=i['id_user'])
+        user_serializer = UserSerializer(user, many=True)
+        print(user_serializer.data)
+        x =  user_serializer.data+i['user_role']
+        l.append(user_serializer.data)
+    json_data = json.dumps(l)    
+    return Response(json_data)
+
+
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def Member_Delete(request, pk):
+    member = Project_Members.objects.get(id=pk)
+    member.delete()
+    return Response('mumber succesfully deleted!')
+
+
+
+
 
 
 
